@@ -1,0 +1,34 @@
+
+##load data
+data=read.table("mag injuries.csv",header=T,sep=',')
+##set response variable and attributes
+y=data$inj
+mag=data$mag
+##plot boxplot
+plot(y~mag)
+##build anova model
+anov=lm(y~mag)
+##view anova model summary
+summary(anov)
+##get residuals of the model
+res=rstandard(anov)
+##create predicted vs residuals plot
+plot( fitted(anov), res, main="Predicted vs residuals plot")
+abline(a=0,b=0,col='red')
+##create qq plot to test normality
+qqnorm(res)
+qqline(res,col=2)
+##load tseries library and perform jarque bera test of normality
+library(tseries)
+jarque.bera.test(res)
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,29 @@
+##load input data for classification by Naive Bayes
+data<-read.csv("property loss prediction.csv")
+##view few records in data
+head(data)
+##view column names
+names(data)
+##set factors and labels
+features=data[,-4]
+class=data$loss
+##shuffle and split data: 75/30 split
+ splitdata=data[sample(nrow(data)),]; 
+ select.data= sample (1:nrow(splitdata), 0.75*nrow(splitdata));
+ ##loaded data from columns 1-3 as features and column 4 loss as class
+ train.data<-features[select.data,]
+ test.data<-features[-select.data,]
+ train.def<-data$loss[select.data]
+ test.def<-data$loss[-select.data]
+##load caret package
+library(caret)
+##creating model with cross validation 10
+model=train(train.data,train.def,'nb',trControl=trainControl(method='cv',number=10))
+##view model summary
+model
+##compare prediction results with class	by frequency
+table(predict(model$finalModel,test.data)$class,test.def)
+##compare prediction results with class	by frequency %
+prop.table(table(predict(model$finalModel,test.data)$class,test.def))
+##variation of accuracy
+plot(model)

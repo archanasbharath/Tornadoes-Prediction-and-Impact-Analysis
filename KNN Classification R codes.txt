@@ -1,0 +1,58 @@
+setwd("C:/R")
+##load data for Classification by KNN
+data<-read.csv("mag categ prediction.csv")
+##view few records in data
+head(data)
+##convert dependent variable mag to factor
+data$mag<-factor(data$mag)
+##verify if the features are numeric
+num.vars<-sapply(data,is.numeric)
+num.vars
+##normalize numeric variables
+data[num.vars]<-lapply(data[num.vars],scale)
+##selecting columns and set as features
+variables<-c("dist","len","wid")
+data.subset<-data[variables]
+##splitting data 70/30 split
+splitdata=data[sample(nrow(data)),]; 
+select.data= sample (1:nrow(splitdata), 0.70*nrow(splitdata));
+train.data<-data.subset[select.data,]
+test.data<-data.subset[-select.data,]
+train.def<-data$mag[select.data]
+test.def<-data$mag[-select.data]
+
+library(class)
+##creating knn model
+model_knn <- train(train.data, train.def, method='knn',trControl=trainControl(method='cv',number=10))
+##model summary
+model_knn
+##plot of variation in accuracy wrt k
+plot(model_knn)
+##make predictions
+predictions<-predict(object=model_knn,test.data)
+##confusion matrix
+confusionMatrix(predictions,test.def)
+
+
+##creating models with different k values
+knn.1<-knn(train.data,test.data,train.def,k=1)
+100 * sum(test.def == knn.1) / (11797*0.30)
+knn.5<-knn(train.data,test.data,train.def,k=5)
+100 * sum(test.def == knn.5) / (11797*0.30)
+knn.9<-knn(train.data,test.data,train.def,k=9)
+100 * sum(test.def == knn.9) / (11797*0.30)
+knn.25<-knn(train.data,test.data,train.def,k=25)
+100 * sum(test.def == knn.25)	/ (11797*0.30)
+knn.101<-knn(train.data,test.data,train.def,k=101)
+100 * sum(test.def == knn.101) / (11797*0.30)
+knn.201<-knn(train.data,test.data,train.def,k=201)
+100 * sum(test.def == knn.201) / (11797*0.30)
+knn.499<-knn(train.data,test.data,train.def,k=499)
+100 * sum(test.def == knn.499) / (11797*0.30)
+
+library(gmodels)
+##model evaluation
+CrossTable(x = test.def, y = knn.499, prop.chisq=FALSE)
+
+
+

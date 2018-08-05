@@ -1,0 +1,173 @@
+> #H0:Distance travelled by tornadoes of magnitude 3 and 4 are the same
+> #Ha: Distance travelled by tornadoes of magnitude 3 is more than that of 4
+>
+>
+> mag3mag4dist=read.table('mag3mag4distance.csv',header=T,sep=',')
+> mag3d=na.omit(mag3mag4dist$mag3)
+> mag4d=na.omit(mag3mag4dist$mag4)
+> boxplot(mag3mag4dist,names=c("Mag3","Mag4"),xlab="tornadoes magnitude",ylab="Distance")
+> boxplot(mag3mag4dist,names=c("Mag3","Mag4"),xlab="tornadoes magnitude",ylab="Distance",outline=FALSE)
+> z.test(mag4d,mag3d,alternative="greater",mu=0,sigma.x=sd(mag4d),sigma.y=sd(mag3d),conf.level=0.95)
+
+        Two-sample z-Test
+
+data:  mag4d and mag3d
+z = 9.1471, p-value < 2.2e-16
+alternative hypothesis: true difference in means is greater than 0
+95 percent confidence interval:
+ 8.865976       NA
+sample estimates:
+mean of x mean of y 
+ 28.85454  18.04471 
+
+> #H0:ALBAMA and TEXAS had the same number of injured list affected by tornadoes
+> #Ha: ALABAMA has more number of injured affected by tornadoes
+> 
+> ALTXinj=read.table('ALTXinjuries.csv',header=T,sep=',')
+> ALinj=na.omit(ALTXinj$AL)
+> TXinj = na.omit(ALTXinj$TX)
+> boxplot(ALTXinj,names=c("Alabama","Texas"),xlab="States",ylab="Injuries caused by tornadoes")
+> boxplot(ALTXinj,names=c("Alabama","Texas"),xlab="States",ylab="Injuries caused by tornadoes", outline=FALSE)
+> 
+> 
+> 
+> #testing after removing outliers
+> ALTXinj=read.table('ALTXinjuries.csv',header=T,sep=',')
+> ALinj=na.omit(ALTXinj$AL)
+> TXinj = na.omit(ALTXinj$TX)
+> boxplot(ALTXinj,names=c("Alabama","Texas"),xlab="States",ylab="Injuries caused by tornadoes")
+> boxplot(ALTXinj,names=c("Alabama","Texas"),xlab="States",ylab="Injuries caused by tornadoes", outline=FALSE)
+> boxplot(ALTXinj,names=c("Alabama","Texas"),xlab="States",ylab="Injuries caused by tornadoes")
+> z.test(ALinj,TXinj,alternative="greater",mu=0,sigma.x=sd(ALinj),sigma.y=sd(TXinj),conf.level=0.95)
+
+        Two-sample z-Test
+
+data:  ALinj and TXinj
+z = 2.6655, p-value = 0.003844
+alternative hypothesis: true difference in means is greater than 0
+95 percent confidence interval:
+ 3.62912      NA
+sample estimates:
+mean of x mean of y 
+14.947368  5.469388 
+>
+>
+> #H0: Average number of fatalities caused by tornadoes is 4
+> #Ha: Average number of fatalities caused by tornadoes is not 4
+>
+>
+> fatdata=read.table('fatalities.csv',header=T,sep=',')
+> fat=fatdata$fatalities
+> describe(fat)
+   vars    n mean   sd median trimmed mad min max range skew kurtosis   se
+X1    1 1615 4.25 9.51      1    2.22   0   1 158   157 7.54    81.26 0.24
+> boxplot(fat)
+> library(asbio)
+Error in library(asbio) : there is no package called ‘asbio’
+> utils:::menuInstallPkgs()
+also installing the dependencies ‘scatterplot3d’, ‘pixmap’, ‘plotrix’, ‘mvtnorm’, ‘deSolve’, ‘multcompView’
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/scatterplot3d_0.3-40.zip'
+Content type 'application/zip' length 309312 bytes (302 KB)
+downloaded 302 KB
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/pixmap_0.4-11.zip'
+Content type 'application/zip' length 108336 bytes (105 KB)
+downloaded 105 KB
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/plotrix_3.6-6.zip'
+Content type 'application/zip' length 678330 bytes (662 KB)
+downloaded 662 KB
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/mvtnorm_1.0-6.zip'
+Content type 'application/zip' length 233316 bytes (227 KB)
+downloaded 227 KB
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/deSolve_1.20.zip'
+Content type 'application/zip' length 2667305 bytes (2.5 MB)
+downloaded 2.5 MB
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/multcompView_0.1-7.zip'
+Content type 'application/zip' length 580151 bytes (566 KB)
+downloaded 566 KB
+
+trying URL 'https://mirror.las.iastate.edu/CRAN/bin/windows/contrib/3.4/asbio_1.5.zip'
+Content type 'application/zip' length 1939092 bytes (1.8 MB)
+downloaded 1.8 MB
+
+package ‘scatterplot3d’ successfully unpacked and MD5 sums checked
+package ‘pixmap’ successfully unpacked and MD5 sums checked
+package ‘plotrix’ successfully unpacked and MD5 sums checked
+package ‘mvtnorm’ successfully unpacked and MD5 sums checked
+package ‘deSolve’ successfully unpacked and MD5 sums checked
+package ‘multcompView’ successfully unpacked and MD5 sums checked
+package ‘asbio’ successfully unpacked and MD5 sums checked
+
+The downloaded binary packages are in
+        C:\Users\archa\AppData\Local\Temp\RtmpeiqLB2\downloaded_packages
+> library(asbio)
+Loading required package: tcltk
+
+Attaching package: ‘asbio’
+
+The following object is masked from ‘package:psych’:
+
+    skew
+
+Warning message:
+package ‘asbio’ was built under R version 3.4.2 
+> z.test(fat,NULL,alternative="two.sided",mu=4,sigma.x=sd(fat),conf.level=0.95)
+
+        One-sample z-Test
+
+data:  fat
+z = 1.0706, p-value = 0.2844
+alternative hypothesis: true mean is not equal to 4
+95 percent confidence interval:
+ 3.789611 4.716890
+sample estimates:
+mean of x 
+ 4.253251 
+>
+>
+>#H0: No of states affected by tornado of magnitudes 0 to 3 is 3
+>#Ha: No of states affected by tornado of magnitude less than 3 is less than 3
+>
+>
+> nsdata=read.table('noofstates.csv',header=T,sep=',')
+> ns=nsdata$ns
+> describe(ns)
+   vars     n mean   sd median trimmed mad min max range skew kurtosis se
+X1    1 61379 1.02 0.15      1       1   0   0   3     3  7.1    52.44  0
+> z.test(ns,NULL,alternative="one.sided",mu=3,sigma.x=sd(ns),conf.level=0.95)
+Error in z.test(ns, NULL, alternative = "one.sided", mu = 3, sigma.x = sd(ns),  : 
+  alternative must be one "greater", "less", "two.sided"
+> boxplot(ns)
+> z.test(ns,NULL,alternative="less",mu=3,sigma.x=sd(ns),conf.level=0.95)
+
+        One-sample z-Test
+
+data:  ns
+z = -3312.6, p-value < 2.2e-16
+alternative hypothesis: true mean is less than 3
+95 percent confidence interval:
+      NA 1.02226
+sample estimates:
+mean of x 
+ 1.021278 
+
+> ns=na.omit(nsdata$ns)
+> z.test(ns,NULL,alternative="less",mu=3,sigma.x=sd(ns),conf.level=0.95)
+
+        One-sample z-Test
+
+data:  ns
+z = -3312.6, p-value < 2.2e-16
+alternative hypothesis: true mean is less than 3
+95 percent confidence interval:
+      NA 1.02226
+sample estimates:
+mean of x 
+ 1.021278 
+
+

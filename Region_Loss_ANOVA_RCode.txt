@@ -1,0 +1,169 @@
+> #Load the data of property loss caused by tornadoes that occurred over the last 20 years - from 1996 - 2016
+> 
+> 
+> 
+> ploss19962016=read.table('ploss19962016.csv',header=T,sep=',')
+> 
+> 
+> 
+> #Draw Boxplots for different regions' property loss to compare and examine which region was affected the most
+> 
+> 
+> 
+> library(ggplot2)
+Warning message:
+package ‘ggplot2’ was built under R version 3.4.2 
+> 
+> 
+> 
+> #load loss data to an object 'loss' and region data to an object 'region'
+> 
+> 
+> 
+> loss=ploss19962016$actualloss
+> region=ploss19962016$Region
+> 
+> 
+> 
+> #drawing box plots
+> 
+> 
+> 
+> ggplot(ploss19962016,aes(xlab="Region", ylab="Loss", x=region,y=log(loss),fill=region))+geom_boxplot()
+> 
+> 
+> 
+> 
+> #build anova model for region Vs loss
+> 
+> 
+> 
+> AnovaForRegionVsLoss = lm(loss~region)
+> summary(AnovaForRegionVsLoss)
+
+Call:
+lm(formula = loss ~ region)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+  -3194897   -2574608   -1929041   -1739041 2797485392 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      2614608     683870   3.823 0.000132 ***
+regionNORTHEAST -1562193    2143537  -0.729 0.466143    
+regionSOUTHEAST  -675567     880828  -0.767 0.443115    
+regionSOUTHWEST   580789    1203583   0.483 0.629424    
+regionWEST      -1398018    2324741  -0.601 0.547608    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 42570000 on 12401 degrees of freedom
+Multiple R-squared:  0.0001665, Adjusted R-squared:  -0.000156 
+F-statistic: 0.5162 on 4 and 12401 DF,  p-value: 0.7238
+
+> #residuals analysis for ANOVA model 'AnovaForRegionVsLoss)
+> 
+> 
+> residuals=rstandard(AnovaForRegionVsLoss)
+> 
+> 
+> #Residuals plot for examining residuals assumption
+> 
+> 
+> plot(fitted(AnovaForRegionVsLoss),residuals,main="Predicted Vs Residuals Plot")
+> abline(a=0,b=0,col='red')
+> 
+> 
+> #qqplot for residuals
+> 
+> qqnorm(residuals)
+> qqline(residuals,col=4)
+> 
+> 
+> 
+> #Jarque Bera test for normality
+> 
+> jarque.bera.test(residuals)
+Error in jarque.bera.test(residuals) : 
+  could not find function "jarque.bera.test"
+> library(tseries)
+
+    ‘tseries’ version: 0.10-42
+
+    ‘tseries’ is a package for time series analysis and computational finance.
+
+    See ‘library(help="tseries")’ for details.
+
+Warning message:
+package ‘tseries’ was built under R version 3.4.2 
+> jarque.bera.test(residuals)
+
+        Jarque Bera Test
+
+data:  residuals
+X-squared = 4151700000, df = 2, p-value < 2.2e-16
+
+> 
+> 
+> #since the residuals doesn't follow normal distribution, applying transformation
+> 
+> 
+> #log transformation
+> 
+> 
+> loganova=lm(log(loss)~region)
+> summary(loganova)
+
+Call:
+lm(formula = log(loss) ~ region)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-6.6246 -1.5896 -0.2033  1.1994 10.6165 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     11.22981    0.03460 324.600  < 2e-16 ***
+regionNORTHEAST -0.10852    0.10844  -1.001 0.316972    
+regionSOUTHEAST -0.15239    0.04456  -3.420 0.000628 ***
+regionSOUTHWEST -0.42985    0.06089  -7.060 1.76e-12 ***
+regionWEST      -0.89474    0.11760  -7.608 2.98e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.153 on 12401 degrees of freedom
+Multiple R-squared:  0.00747,   Adjusted R-squared:  0.00715 
+F-statistic: 23.33 on 4 and 12401 DF,  p-value: < 2.2e-16
+
+> #residuals analysis for log anova model
+> 
+> 
+> logresiduals=rstandard(loganova)
+> 
+> 
+> #residuals vs predicted plot
+> 
+> 
+> plot(fitted(loganova),logresiduals,main="Predicted Vs Residuals Plot")
+> abline(a=0,b=0,col='red')
+> 
+> 
+> #QQ PLOT
+> 
+> 
+> qqnorm(logresiduals)
+> qqline(logresiduals,col=3)
+> 
+> 
+> #Jarque Bera test for normality
+> 
+> jarque.bera.test(logresiduals)
+
+        Jarque Bera Test
+
+data:  logresiduals
+X-squared = 857.75, df = 2, p-value < 2.2e-16
+
+> save.image("E:\\MITM\\Fall 2017\\ITMD527\\RProject\\fulltornadoes\\ANOVA-DOCUMENTATION.RData")
+> 
